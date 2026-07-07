@@ -1,2 +1,2 @@
 # Tape
-A offline music player app for Android
+An offline music player built with Jetpack Compose.
