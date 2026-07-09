@@ -1,6 +1,6 @@
 <img src=".idea/icon.svg" width="100px" align="left">
 
-### NodeLook
+### Tape
 
 ![Version badge][Version badge]
 
