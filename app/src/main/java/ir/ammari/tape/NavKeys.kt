@@ -4,7 +4,7 @@ import androidx.navigation3.runtime.NavKey
 import kotlinx.serialization.Serializable
 
 @Serializable
-data object Home : NavKey
+data object HomePage : NavKey
 
 @Serializable
-data object Settings : NavKey
+data object SettingsPage : NavKey

@@ -1,6 +1,11 @@
 package ir.ammari.tape
 
 import android.os.Bundle
+import android.os.Build
+import android.os.Environment
+import android.content.Intent
+import android.net.Uri
+
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -30,6 +35,7 @@ import android.widget.Toast
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.core.app.ActivityCompat.requestPermissions
 
 import ir.ammari.tape.ui.theme.TapeTheme
 
@@ -122,7 +128,30 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun MainScreen(modifier: Modifier = Modifier) {
 
-    val backStack = rememberNavBackStack(Home)
+    if (if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            Environment.isExternalStorageManager()
+        } else {
+            TODO("VERSION.SDK_INT < R")
+        }
+    ) {
+        // Permission granted
+    } else {
+        val context = LocalContext.current
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R &&
+            !Environment.isExternalStorageManager()
+        ) {
+            val intent = Intent(
+                android.provider.Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION
+            ).apply {
+                data = Uri.parse("package:${context.packageName}")
+            }
+
+            context.startActivity(intent)
+        }
+    }
+
+    val backStack = rememberNavBackStack(HomePage)
 
     NavDisplay(
         backStack = backStack,
@@ -132,14 +161,14 @@ fun MainScreen(modifier: Modifier = Modifier) {
             }
         },
         entryProvider = entryProvider {
-            entry<Home> {
+            entry<HomePage> {
                 HomeScreen(
                     onOpenSettings = {
-                        backStack += Settings
+                        backStack += SettingsPage
                     }
                 )
             }
-            entry<Settings> {
+            entry<SettingsPage> {
                 SettingsScreen()
             }
         },
